@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Grade Calculator (Python Flask)</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f6f9; padding: 30px; }
+    .container { max-width: 650px; margin: auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+    input { padding: 8px; flex: 1; border: 1px solid #ccc; border-radius: 4px; }
+    button { padding: 8px 15px; background: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    button.clear-btn { background: #dc3545; margin-top: 10px; }
+    .error { color: #dc3545; margin-bottom: 15px; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+    th { background: #f0f2f5; }
+    .summary { background: #eef4ff; padding: 15px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Student Grade & GWA Calculator</h1>
+
+    {% if error %}
+      <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" action="/" class="input-group">
+      <input type="text" name="subject" placeholder="Subject (e.g., CpE 2)" required>
+      <input type="number" step="any" name="units" placeholder="Units (e.g., 3)" required>
+      <input type="number" step="any" name="grade" placeholder="Grade (e.g., 88)" required>
+      <button type="submit">Add Subject</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Units</th>
+          <th>Grade</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sub in subjects %}
+        <tr>
+          <td>{{ sub.name }}</td>
+          <td>{{ sub.units }}</td>
+          <td>{{ "%.2f"|format(sub.grade) }}</td>
+          <td>{{ sub.status }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="summary">
+      <p><strong>Total Units:</strong> {{ total_units }}</p>
+      <p><strong>Weighted Average:</strong> {{ "%.2f"|format(average) }}</p>
+      <p><strong>Overall Remark:</strong> {{ remark }}</p>
+    </div>
+
+    <form method="POST" action="/clear">
+      <button type="submit" class="clear-btn">Reset All</button>
+    </form>
+  </div>
+</body>
+</html>
